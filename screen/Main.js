@@ -14,7 +14,7 @@ dayjs.extend(relativeTime);
 
 export default function Main(props) {
 	const [products, setProducts] = useState([]);
-	const [banners, setBanners] = useState([]);
+	// const [banners, setBanners] = useState([]);
 	const PAGE_WIDTH = Dimensions.get("window").width;
 	const baseOptions = {
 		width: PAGE_WIDTH / 4,
@@ -26,17 +26,9 @@ export default function Main(props) {
 	};
 	useEffect(() => {
 		axios
-			.get(`${API_URL}/products/`)
-			.then((result) => {
-				setProducts(result.data.products);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-		axios
-			.get(`${API_URL}/banners/`)
-			.then((result) => {
-				setBanners(result.data.banners);
+		.get(`${API_URL}/productdate`)
+		.then((result) => {
+			setProducts(result.data.product);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -54,14 +46,14 @@ export default function Main(props) {
 						<Carousel
 							{...baseOptions}
 							autoPlay={true}
-							data={banners}
-							renderItem={(banner) => {
-								return <Image key={banner.id} source={{ uri: `${API_URL}/${banner.item.imageUrl}` }} style={{ width: "100%", height: "100%" }} />;
+							data={products}
+							renderItem={(product) => {
+								return <Image key={product.p_id} source={{ uri: `${API_URL}/${product.item.imageUrl}` }} style={{ width: "100%", height: "100%" }} />;
 							}}
 						/>
 					</TouchableOpacity>
 
-					<Text>Products</Text>
+					<Text>패키지</Text>
 					{products &&
 						products.map((product, index) => {
 							return (
@@ -76,15 +68,16 @@ export default function Main(props) {
 											<Image source={{ uri: `${API_URL}/${product.imageUrl}` }} style={styles.productImage} resizeMode={"contain"} />
 										</View>
 										<View style={styles.productContent}>
-											<Text style={styles.productName}>{product.name}</Text>
-											<Text style={styles.productPrice}>{product.price}원</Text>
+											<Text style={styles.productName}>{product.p_name}</Text>
+											<Text style={styles.productCount}>남은수량 : {product.count}개</Text>
+											<Text style={styles.productPrice}>{product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</Text>
 										</View>
 										<View style={styles.productFooter}>
 											<View style={styles.productSeller}>
-												<Image source={{ uri: `https://cdn-icons-png.flaticon.com/512/10277/10277946.png` }} style={styles.productAvatar} />
-												<Text style={styles.productSellerName}>{product.seller}</Text>
+												<Image source={{ uri: `https://cdn-icons-png.flaticon.com/512/6030/6030299.png` }} style={styles.productAvatar} />
+												<Text style={styles.productSellerName}>{product.start}~{product.end}</Text>
 											</View>
-											<Text style={styles.productDate}>{dayjs(product.createdAt).fromNow()}</Text>
+											<Text style={styles.productDate}>{dayjs(product.p_sdate).fromNow()} 출발</Text>
 										</View>
 									</View>
 								</TouchableOpacity>
@@ -112,6 +105,7 @@ const styles = StyleSheet.create({
 	productImage: {
 		width: "100%",
 		height: 210,
+		opacity: 1,
 	},
 	productContent: {
 		padding: 8,
@@ -133,6 +127,9 @@ const styles = StyleSheet.create({
 	},
 	productName: {
 		fontSize: 16,
+	},
+	productCount:{
+		fontSize: 12,
 	},
 	productPrice: {
 		fontSize: 18,
