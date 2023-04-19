@@ -11,7 +11,7 @@ export default function App() {
 		<SafeAreaView style={styles.safeView}>
 			<NavigationContainer>
 				<Stack.Navigator initialRouteName="Main">
-					<Stack.Screen name="Main" component={Main} options={{title:"홈화면"}}/>
+					<Stack.Screen name="Main" component={Main} options={{title:"OneTrip"}}/>
 					<Stack.Screen name="Product" component={Product} options={{title:"상품상세화면"}}/>
 				</Stack.Navigator>
 			</NavigationContainer>		

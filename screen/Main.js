@@ -53,7 +53,7 @@ export default function Main(props) {
 						/>
 					</TouchableOpacity>
 
-					<Text>패키지</Text>
+					<Text>&nbsp;</Text>
 					{products &&
 						products.map((product, index) => {
 							return (
